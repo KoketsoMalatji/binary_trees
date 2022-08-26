@@ -1,82 +1,54 @@
 #include "binary_trees.h"
 
 /**
-  * node_depth - count the levels of the Binary tree
-  * @tree: root node of the BT
-  * Return: Nothing
-  */
-size_t node_depth(const binary_tree_t *tree)
+ * recursive_height - measures the height of a binary tree
+ *
+ * @tree: tree root
+ * Return: height
+ */
+size_t recursive_height(const binary_tree_t *tree)
 {
-	if (!tree)
+	size_t left = 0;
+	size_t right = 0;
+
+	if (tree == NULL)
 		return (0);
 
-	return (1 + node_depth(tree->parent));
+	left = recursive_height(tree->left);
+	right = recursive_height(tree->right);
+
+	if (left > right)
+		return (left + 1);
+
+	return (right + 1);
 }
 
 /**
-  * binary_tree_depth - measures the depth of a node in a binary tree
-  * @tree: root node of the BT
-  * Return: Nothing
-  */
-size_t binary_tree_depth(const binary_tree_t *tree)
-{
-	if (!tree)
-		return (0);
-
-	return (node_depth(tree) - 1);
-}
-
-/**
-  * binary_tree_height - counts the leaves in a binary tree
-  * @tree: root node of the BT
-  * Return: number of leaves
-  */
+ * binary_tree_height - calls recursive_height to return the height
+ * of a binary tree
+ *
+ * @tree: tree root
+ * Return: height of the tree or 0 if tree is NULL;
+ */
 size_t binary_tree_height(const binary_tree_t *tree)
 {
-	size_t height = 0, height_left = 0, height_right = 0, max_high = 0;
+	if (tree == NULL)
+		return (-1);
 
-	if (!tree)
-		return (0);
-
-	if (!(tree->left) && !(tree->right))
-	{
-		max_high = binary_tree_depth(tree);
-		if (max_high > height)
-			height = max_high;
-		return (height);
-	}
-
-	height_left = binary_tree_height(tree->left);
-	height_right = binary_tree_height(tree->right);
-
-	if (height_left >= height_right)
-		height = height_left;
-
-	else
-		height = height_right;
-
-	return (height);
+	return (recursive_height(tree) - 1);
 }
 
 /**
-  * binary_tree_balance - measures the balance factor of a binary tree
-  * @tree: root node of the BT
-  * Return: number of leaves
-  */
+ * binary_tree_balance - calls recursive_balance to return the balance
+ * of a binary tree
+ *
+ * @tree: tree root
+ * Return: balance of the tree or 0 if tree is NULL;
+ */
 int binary_tree_balance(const binary_tree_t *tree)
 {
-	size_t height_left = 0, height_right = 0;
-
-	if (!tree)
+	if (tree == NULL)
 		return (0);
 
-	if (tree->left)
-		height_left = 1 + binary_tree_height(tree->left);
-		height_left -= binary_tree_depth(tree->left);
-
-	if (tree->right)
-		height_right = 1 + binary_tree_height(tree->right);
-		height_right -= binary_tree_depth(tree->right);
-
-	return (height_left - height_right);
+	return (binary_tree_height(tree->left) - binary_tree_height(tree->right));
 }
